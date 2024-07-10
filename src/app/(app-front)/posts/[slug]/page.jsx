@@ -7,19 +7,19 @@
 'use client'
 
 // Import necessary components and dependencies
-import { PublicPagesLayout } from '@/components/layout/public-pages-layout/PublicPagesLayout'; // Import the PublicPagesLayout component
-import { BlogPostCard } from '@/components/pages/BlogPostCard'; // Import the BlogPostCard component
-import useAuth from '@/hooks/useAuth'; // Import the useAuth hook for authentication
-import PostsProvider from '@/providers/PostsProvider'; // Import the PostsProvider component
-import pointService from '@/services/pointService'; // Import the pointService for interacting with the database
-import { isoDateToShortDate } from '@/utils/dateConvertor'; // Import the isoDateToShortDate utility function
+import { PublicPagesLayout } from '@/components/layout/public-pages-layout/PublicPagesLayout' // Import the PublicPagesLayout component
+import { BlogPostCard } from '@/components/pages/BlogPostCard' // Import the BlogPostCard component
+import useAuth from '@/hooks/useAuth' // Import the useAuth hook for authentication
+import PostsProvider from '@/providers/PostsProvider' // Import the PostsProvider component
+import pointService from '@/services/pointService' // Import the pointService for interacting with the database
+import { isoDateToShortDate } from '@/utils/dateConvertor' // Import the isoDateToShortDate utility function
 import {
   checkUserLikedPost,
   fetchPointTypes,
   fetchPointTypesCounts,
   fetchPost,
   fetchRelatedPosts
-} from '@/utils/helperFunctions/postDetails'; // Import the helper functions for fetching related data
+} from '@/utils/helperFunctions/postDetails' // Import the helper functions for fetching related data
 
 // Import necessary UI components from Material-UI
 import {
@@ -35,22 +35,22 @@ import {
   IconButton,
   Tooltip,
   Typography
-} from '@mui/material';
+} from '@mui/material'
 
 // Import UI components from Material-UI
-import Alert from '@mui/material/Alert'; // Import the Alert component
-import Modal from '@mui/material/Modal'; // Import the Modal component
-import Snackbar from '@mui/material/Snackbar'; // Import the Snackbar component
-import DOMPurify from 'dompurify'; // Import the DOMPurify library for sanitizing HTML
+import Alert from '@mui/material/Alert' // Import the Alert component
+import Modal from '@mui/material/Modal' // Import the Modal component
+import Snackbar from '@mui/material/Snackbar' // Import the Snackbar component
+import DOMPurify from 'dompurify' // Import the DOMPurify library for sanitizing HTML
 
 // Import necessary navigation components from Next.js
-import Link from 'next/link'; // Import the Link component
-import { useEffect, useState } from 'react'; // Import the useState and useEffect hooks
+import Link from 'next/link' // Import the Link component
+import { useEffect, useState } from 'react' // Import the useState and useEffect hooks
 
 // Import icons from different icon libraries
-import { FaCopy, FaFacebook, FaLinkedin, FaTwitter, FaWhatsapp } from 'react-icons/fa';
-import { HiOutlineThumbUp, HiThumbUp } from 'react-icons/hi';
-import { RiShareForwardLine } from 'react-icons/ri';
+import { FaCopy, FaFacebook, FaLinkedin, FaTwitter, FaWhatsapp } from 'react-icons/fa'
+import { HiOutlineThumbUp, HiThumbUp } from 'react-icons/hi'
+import { RiShareForwardLine } from 'react-icons/ri'
 
 // Define the style object for the modal component
 const style = {
@@ -74,47 +74,47 @@ const style = {
  * @param {Object} query - The query object containing the post slug.
  * @return {JSX.Element} The PostDetailsPage component.
  */
-const PostDetailsPage = query => {
+export default function PostDetailsPage({ params }) {
   // State variables to store post details, loading state, point types,
   // related posts, and user interactions
-  const [likes, setLikes] = useState(0);
-  const [shares, setShares] = useState(0);
-  const [reads, setReads] = useState(0);
-  const [liked, setLiked] = useState(false);
-  const [pointId, setPointId] = useState(null);
-  const [pointTypesCountUpdate, setPointTypesCountUpdate] = useState(false);
-  const [post, setPost] = useState(null); // State to store the fetched post
-  const [loading, setLoading] = useState(true);
-  const [pointTypes, setPointTypes] = useState([]);
-  const { token, user } = useAuth();
-  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [likes, setLikes] = useState(0)
+  const [shares, setShares] = useState(0)
+  const [reads, setReads] = useState(0)
+  const [liked, setLiked] = useState(false)
+  const [pointId, setPointId] = useState(null)
+  const [pointTypesCountUpdate, setPointTypesCountUpdate] = useState(false)
+  const [post, setPost] = useState(null) // State to store the fetched post
+  const [loading, setLoading] = useState(true)
+  const [pointTypes, setPointTypes] = useState([])
+  const { token, user } = useAuth()
+  const [relatedPosts, setRelatedPosts] = useState([])
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success')
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false)
 
   /**
    * Closes the snackbar.
    */
   const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+    setSnackbarOpen(false)
+  }
 
   /**
    * Opens the modal.
    */
   const handleModalOpen = () => {
-    setModalOpen(true);
-  };
+    setModalOpen(true)
+  }
 
   /**
    * Closes the modal.
    */
   const handleModalClose = () => {
-    setModalOpen(false);
-  };
+    setModalOpen(false)
+  }
 
   /**
    * Fetches the post, related posts, and point types counts when the
@@ -122,17 +122,17 @@ const PostDetailsPage = query => {
    * changes.
    */
   useEffect(() => {
-    const postSlug = query.params.slug;
+    const postSlug = params.params.slug
 
     if (postSlug) {
       fetchPost(postSlug, setPost, setLoading, id =>
         fetchPointTypesCounts(id, setLikes, setLiked, setPointId, setShares, setReads, setPointTypesCountUpdate, user)
-      );
-      fetchPointTypes(setPointTypes);
-      fetchRelatedPosts(postSlug, setRelatedPosts, setLoading);
-      checkUserLikedPost(user, postSlug, setLiked, setPointId);
+      )
+      fetchPointTypes(setPointTypes)
+      fetchRelatedPosts(postSlug, setRelatedPosts, setLoading)
+      checkUserLikedPost(user, postSlug, setLiked, setPointId)
     }
-  }, [query, pointTypesCountUpdate, user]);
+  }, [params, pointTypesCountUpdate, user])
 
   /**
    * Handles the action button click event.
@@ -142,28 +142,28 @@ const PostDetailsPage = query => {
   const handleActionButtonClick = async action => {
     if (!user) {
       // Show error message if user is not logged in
-      setSnackbarMessage('Please log in to perform this action.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      setSnackbarMessage('Please log in to perform this action.')
+      setSnackbarSeverity('error')
+      setSnackbarOpen(true)
 
-      return;
+      return
     }
 
     if (user.isAdmin) {
       // Show error message if user is an admin
-      setSnackbarMessage('Admins cannot perform this action.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
+      setSnackbarMessage('Admins cannot perform this action.')
+      setSnackbarSeverity('error')
+      setSnackbarOpen(true)
 
-      return;
+      return
     }
 
-    const pointType = pointTypes.find(pt => pt.action === action);
+    const pointType = pointTypes.find(pt => pt.action === action)
     if (!pointType) {
       // Show error message if point type is not found
-      console.error(`Point type for action ${action} not found`);
+      console.error(`Point type for action ${action} not found`)
 
-      return;
+      return
     }
 
     /**
@@ -172,7 +172,7 @@ const PostDetailsPage = query => {
      * @param {string} action - The action to perform (like, share, etc.).
      * @returns {Promise<void>} - A promise that resolves when the action is complete.
      */
-    const handleActionButtonClick = async (action) => {
+    const handleActionButtonClick = async action => {
       const data = { userId: user._id, postId: post._id, pointTypeId: pointType._id }
 
       try {
@@ -582,5 +582,3 @@ const PostDetailsPage = query => {
     </PostsProvider>
   )
 }
-
-export default PostDetailsPage

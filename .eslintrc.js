@@ -8,8 +8,7 @@ module.exports = {
     }
   },
 
-  // extends: ['next/babel', 'next/core-web-vitals', 'plugin:import/recommended', 'prettier'],
-  extends: ['next/babel', 'next/core-web-vitals'],
+  extends: ['next/babel', 'next/core-web-vitals', 'plugin:import/recommended', 'prettier'],
   rules: {
     'jsx-a11y/alt-text': 'off',
     'react/display-name': 'off',
